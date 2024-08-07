@@ -1,6 +1,6 @@
 package com.example.dogs.controllers;
 
-import com.example.dogs.DogNotFoundException;
+import com.example.dogs.exception.DogNotFoundException;
 import com.example.dogs.model.Dog;
 import com.example.dogs.model.DogsRepository;
 import org.springframework.web.bind.annotation.*;

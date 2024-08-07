@@ -1,5 +1,6 @@
 package com.example.dogs;
 
+import com.example.dogs.controllers.HomeController;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

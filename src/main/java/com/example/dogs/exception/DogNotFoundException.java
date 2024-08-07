@@ -1,4 +1,4 @@
-package com.example.dogs;
+package com.example.dogs.exception;
 
 public class DogNotFoundException extends RuntimeException {
 
