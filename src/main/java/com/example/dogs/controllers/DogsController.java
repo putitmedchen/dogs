@@ -2,28 +2,40 @@ package com.example.dogs.controllers;
 
 import com.example.dogs.exception.DogNotFoundException;
 import com.example.dogs.model.Dog;
+import com.example.dogs.model.DogsModelAssembler;
 import com.example.dogs.model.DogsRepository;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 public class DogsController {
 
     private final DogsRepository repository;
+    private final DogsModelAssembler assembler;
 
-    DogsController(DogsRepository repository) {
+    DogsController(DogsRepository repository, DogsModelAssembler assembler) {
         this.repository = repository;
+        this.assembler = assembler;
     }
 
 
     // Aggregate root
     // tag::get-aggregate-root[]
     @GetMapping("/dogs")
-    List<Dog> all() {
-        return repository.findAll();
+    public CollectionModel<EntityModel<Dog>> all() {
+        List<EntityModel<Dog>> dogs = repository.findAll().stream()
+                .map(assembler::toModel)
+                .collect(Collectors.toList());
+
+        return CollectionModel.of(dogs, linkTo(methodOn(DogsController.class).all()).withSelfRel());
     }
-    // end::get-aggregate-root[]
 
     @PostMapping("/dogs")
     Dog newDog(@RequestBody Dog newDog) {
@@ -32,9 +44,12 @@ public class DogsController {
 
     // Single item
     @GetMapping("/dogs/{id}")
-    Dog one(@PathVariable Long id) {
-        return repository.findById(id)
+    public EntityModel<Dog> one(@PathVariable Long id) {
+
+        Dog dog = repository.findById(id) //
                 .orElseThrow(() -> new DogNotFoundException(id));
+
+        return assembler.toModel(dog);
     }
 
     @PutMapping("/dogs/{id}")
@@ -56,4 +71,5 @@ public class DogsController {
     void deleteDog(@PathVariable Long id) {
         repository.deleteById(id);
     }
+
 }

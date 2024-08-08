@@ -79,4 +79,7 @@ public class Dog {
         return "Dog{" + "id=" + this.id + ", name='" + this.name + '\'' + ", bread='" + this.bread + '\'' + ", color='" + this.color + '\'' + ", age='" + this.age + '}';
     }
 
+    public Long getId() {
+        return this.id;
+    }
 }

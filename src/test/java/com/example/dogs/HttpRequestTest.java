@@ -1,5 +1,8 @@
 package com.example.dogs;
 
+import com.example.dogs.model.Bread;
+import com.example.dogs.model.Color;
+import com.example.dogs.model.Dog;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,5 +25,11 @@ public class HttpRequestTest {
     void greetingShouldReturnDefaultMessage() throws Exception {
         assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/",
                 String.class)).contains("Hello, World");
+    }
+
+    @Test
+    void postNewDog() throws Exception {
+        assertThat(this.restTemplate.postForObject("http://localhost:" + port + "/dogs",new Dog("Gigi", Bread.CORGI, Color.BLACK, 3),
+                String.class));
     }
 }
